@@ -1,18 +1,54 @@
 import './App.css';
+import { useState} from 'react';
 
 function App() {
 
+	const [timer, setTimer] = useState(25 * 60)
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [myInterval, setMyInterval] = useState(null);
+	
+	const handleStartStopClick = () => {
+		if(isPlaying === false) 
+		{
+			setIsPlaying(true);
+			let myInterval= setInterval(() => {
+				setTimer(prevTimer => {
+					if(prevTimer === 0) {
+						clearInterval(myInterval);
+						setIsPlaying(false);
+						return prevTimer;
+					}
+					return prevTimer - 1;
+				});
+			}, 1000);
+			setMyInterval(myInterval);
+		}
+		else
+		{
+			setIsPlaying(false);
+			clearInterval(myInterval);
+			setMyInterval(null);
+		}
+	}
 
+	const handleResetButtonClick = () => {
+		clearInterval(myInterval);
+		setMyInterval(null);
+		setIsPlaying(false);
+		setTimer(25 * 60);
+	}
 
 	return (
 		<div className="App">
 			<div className='pomodoro--wrapper'>
 				<div className='pomodoro--timer'>
 					<div id="timer-label">Session</div>
-					<div id="time-left">25:00</div>
+					<div id="time-left">{
+						`${Math.floor(timer / 60) < 10 ?'0':''}${Math.floor(timer / 60)}:${(timer%60) < 10 ?'0':''}${(timer%60)}`
+					}</div>
 					<div className='timer--controls'>
-						<button id="start_stop" className='timer--control'>Start/Stop</button>
-						<button id="reset" className='timer--control'>Reset</button>
+						<button id="start_stop" className='timer--control' onClick={handleStartStopClick}>Start/Stop</button>
+						<button id="reset" className='timer--control' onClick={handleResetButtonClick}>Reset</button>
 					</div>
 				</div>
 				<div className='pomodoro--settings'>
