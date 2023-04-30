@@ -1,12 +1,13 @@
 import './App.css';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+
 
 function App() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [myInterval, setMyInterval] = useState(null);
 	const [breakLength, setBreakLength] = useState(5);
 	const [sessionLength, setSessionLength] = useState(25);
-	const [timer, setTimer] = useState(25 * 60)
+	const [timer, setTimer] = useState(25*60)
 	const [timerType, setTimerType] = useState('Session');
 	
 	const handleStartStopClick = () => {
@@ -16,8 +17,6 @@ function App() {
 			let myInterval= setInterval(() => {
 				setTimer(prevTimer => {
 					if(prevTimer === 0) {
-						clearInterval(myInterval);
-						setIsPlaying(false);
 						return prevTimer;
 					}
 					return prevTimer - 1;
@@ -41,6 +40,9 @@ function App() {
 		setBreakLength(5);
 		setSessionLength(25);
 		setTimerType('Session');
+		const audio = document.getElementById('beep');
+		audio.pause();
+		audio.currentTime = 0;
 	}
 
 	const handleSettingsClick = (e) => {
@@ -80,9 +82,29 @@ function App() {
 		}
 	}
 
+	useEffect(() => {
+		if(timer === 0) {
+			const audio = document.getElementById('beep');
+			audio.play();
+			if(timerType === 'Session') {
+				setTimeout(() => {setTimerType('Break');
+				setTimer(breakLength * 60)}, 2000);
+			}
+			else {
+				setTimeout(() => {setTimerType('Session');
+				setTimer(sessionLength * 60)}, 2000);
+			}
+		}
+	}, [timer, timerType, breakLength, sessionLength]);
+
+
+
+
 	return (
 		<div className="App">
 			<div className='pomodoro--wrapper'>
+				<audio id="beep" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav">
+				</audio>
 				<div className='pomodoro--timer'>
 					<div id="timer-label">{timerType}</div>
 					<div id="time-left">{
