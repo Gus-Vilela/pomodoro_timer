@@ -1,11 +1,13 @@
 import './App.css';
-import { useState} from 'react';
+import {useState} from 'react';
 
 function App() {
-
-	const [timer, setTimer] = useState(25 * 60)
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [myInterval, setMyInterval] = useState(null);
+	const [breakLength, setBreakLength] = useState(5);
+	const [sessionLength, setSessionLength] = useState(25);
+	const [timer, setTimer] = useState(25 * 60)
+	const [timerType, setTimerType] = useState('Session');
 	
 	const handleStartStopClick = () => {
 		if(isPlaying === false) 
@@ -36,13 +38,53 @@ function App() {
 		setMyInterval(null);
 		setIsPlaying(false);
 		setTimer(25 * 60);
+		setBreakLength(5);
+		setSessionLength(25);
+		setTimerType('Session');
+	}
+
+	const handleSettingsClick = (e) => {
+		if (isPlaying === false){
+			switch (e.target.id) {
+				case 'break-decrement':
+					setBreakLength(p => {
+						if(p-1 < 1) return p;
+						timerType === 'Break' && setTimer((p-1) * 60);
+						return p-1;
+					});
+					break;
+				case 'break-increment':
+					setBreakLength(p => {
+						if(p+1 > 60) return p;
+						timerType === 'Break' && setTimer((p+1) * 60);
+						return p+1;
+					});
+					break;
+				case 'session-decrement':
+					setSessionLength(p => {
+						if(p-1 < 1) return p;
+						timerType === 'Session' && setTimer((p-1) * 60);
+						return p-1;
+					});
+					break;
+				case 'session-increment':
+					setSessionLength(p => {
+						if(p+1 > 60) return p;
+						timerType === 'Session' && setTimer((p+1) * 60);
+						return p+1;
+					});
+					break;
+				default:
+					break;
+			}	
+		}
 	}
 
 	return (
 		<div className="App">
 			<div className='pomodoro--wrapper'>
 				<div className='pomodoro--timer'>
-					<div id="timer-label">Session</div>
+					<div id="timer-label">{timerType}</div>
 					<div id="time-left">{
 						`${Math.floor(timer / 60) < 10 ?'0':''}${Math.floor(timer / 60)}:${(timer%60) < 10 ?'0':''}${(timer%60)}`
 					}</div>
@@ -54,18 +96,18 @@ function App() {
 				<div className='pomodoro--settings'>
 					<div className='pomodoro--settings-wrapper'>
 						<div id="break-label">Break Length</div>
-						<div id='break-length'>5</div>
+						<div id='break-length'>{breakLength}</div>
 						<div className='settings--controls'>
-							<button id="break-decrement" className='settings--control'>-</button>
-							<button id="break-increment" className='settings--control'>+</button>
+							<button id="break-decrement" className='settings--control' onClick={handleSettingsClick}>-</button>
+							<button id="break-increment" className='settings--control' onClick={handleSettingsClick}>+</button>
 						</div>
 					</div>
 					<div className='pomodoro--settings-wrapper'>
 						<div id="session-label">Session Length</div>
-						<div id='session-length'>25</div>
+						<div id='session-length'>{sessionLength}</div>
 						<div className='settings--controls'>
-							<button id="session-decrement" className='settings--control'>-</button>
-							<button id="session-increment" className='settings--control'>+</button>
+							<button id="session-decrement" className='settings--control' onClick={handleSettingsClick}>-</button>
+							<button id="session-increment" className='settings--control' onClick={handleSettingsClick}>+</button>
 						</div>
 					</div>
 				</div>
