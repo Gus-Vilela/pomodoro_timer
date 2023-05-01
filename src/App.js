@@ -7,7 +7,7 @@ function App() {
 	const [myInterval, setMyInterval] = useState(null);
 	const [breakLength, setBreakLength] = useState(5);
 	const [sessionLength, setSessionLength] = useState(25);
-	const [timer, setTimer] = useState(25*60)
+	const [timer, setTimer] = useState(0.1*60)
 	const [timerType, setTimerType] = useState('Session');
 	
 	const handleStartStopClick = () => {
@@ -90,7 +90,7 @@ function App() {
 				setTimeout(() => {setTimerType('Break');
 				setTimer(breakLength * 60)}, 2000);
 			}
-			else {
+			else if( timerType === 'Break'){
 				setTimeout(() => {setTimerType('Session');
 				setTimer(sessionLength * 60)}, 2000);
 			}
@@ -101,11 +101,23 @@ function App() {
 
 
 	return (
-		<div className="App">
-			<div className='pomodoro--wrapper'>
+		<div className="App" style={
+			{
+				backgroundColor: timerType === 'Session' ? '#EE3D3D' : '#2F6F74',
+			}
+		}>
+			<div className='pomodoro--wrapper' style={
+				{
+					backgroundColor: timerType === 'Session' ? '#F04F4F' : '#448388',
+				}
+			}>
 				<audio id="beep" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav">
 				</audio>
-				<div className='pomodoro--timer'>
+				<div className='pomodoro--timer' style={
+					{
+						borderColor: timerType === 'Session' ? '#4FBA8F' : '#A7DDC8',
+					}
+				}>
 					<div id="timer-label">{timerType}</div>
 					<div id="time-left">{
 						`${Math.floor(timer / 60) < 10 ?'0':''}${Math.floor(timer / 60)}:${(timer%60) < 10 ?'0':''}${(timer%60)}`
