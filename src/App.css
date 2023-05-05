@@ -18,33 +18,35 @@
   padding: 30px;
 }
 .pomodoro--timer{
-  border: 0.4rem solid;  /*#40A47C; #A7DDC8*/
+  /* border: 0.4rem solid;  #40A47C; #A7DDC8 */
   border-radius: 100%;
-  width: 350px;
-  height: 350px;
+  width: 450px;
+  height: 450px;
   font-size: 50px;
   color: #fff;
   font-weight: 350;
   margin: 0;
-  padding: 50px;
-  display: flex;
+  /* padding: 50px; */
+  /* display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  align-items: center;
-  transition: all 0.2s ease-in-out;
+  align-items: center; */
+  /*  */
   line-height: 50px;
 }
 #time-left{
   font-size: 120px;
   font-weight: bold;
   line-height: 100px;
+  margin-top: 42px;
+  transition: all 0.2s ease-in-out;
 }
 .timer--controls{
   display: flex;
   justify-content: center;
   align-items: center;
   height: 50px;
-  margin-top: 10px;
+  margin-top: 45px;
 }
 .timer--control{
   background: none;

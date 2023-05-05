@@ -1,5 +1,7 @@
 import './App.css';
 import {useEffect, useState} from 'react';
+import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 
 function App() {
@@ -7,7 +9,7 @@ function App() {
 	const [myInterval, setMyInterval] = useState(null);
 	const [breakLength, setBreakLength] = useState(5);
 	const [sessionLength, setSessionLength] = useState(25);
-	const [timer, setTimer] = useState(0.1*60)
+	const [timer, setTimer] = useState(25*60)
 	const [timerType, setTimerType] = useState('Session');
 	
 	const handleStartStopClick = () => {
@@ -106,6 +108,7 @@ function App() {
 				backgroundColor: timerType === 'Session' ? '#EE3D3D' : '#2F6F74',
 			}
 		}>
+			
 			<div className='pomodoro--wrapper' style={
 				{
 					backgroundColor: timerType === 'Session' ? '#F04F4F' : '#448388',
@@ -113,20 +116,33 @@ function App() {
 			}>
 				<audio id="beep" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav">
 				</audio>
-				<div className='pomodoro--timer' style={
-					{
-						borderColor: timerType === 'Session' ? '#4FBA8F' : '#A7DDC8',
-					}
-				}>
-					<div id="timer-label">{timerType}</div>
-					<div id="time-left">{
-						`${Math.floor(timer / 60) < 10 ?'0':''}${Math.floor(timer / 60)}:${(timer%60) < 10 ?'0':''}${(timer%60)}`
-					}</div>
-					<div className='timer--controls'>
-						<button id="start_stop" className='timer--control' onClick={handleStartStopClick}>Start/Stop</button>
-						<button id="reset" className='timer--control' onClick={handleResetButtonClick}>Reset</button>
-					</div>
+				
+				<div className='pomodoro--timer' 
+				// style={
+				// 	{
+				// 		borderColor: timerType === 'Session' ? '#4FBA8F' : '#A7DDC8',
+				// 	}
+				// }
+				>
+					<CircularProgressbarWithChildren value={timer} minValue={0} 
+					maxValue={timerType==="Session"?sessionLength*60:breakLength*60} strokeWidth={1.4} counterClockwise={true} 
+					styles={buildStyles({
+						strokeLinecap: "butt",
+						pathColor: timerType === 'Session' ? '#4FBA8F' : '#A7DDC8',
+						trailColor: "white",
+						pathTransitionDuration: 0.2,
+					})}>
+						<div id="timer-label">{timerType}</div>
+						<div id="time-left">{
+							`${Math.floor(timer / 60) < 10 ?'0':''}${Math.floor(timer / 60)}:${(timer%60) < 10 ?'0':''}${(timer%60)}`
+						}</div>
+						<div className='timer--controls'>
+							<button id="start_stop" className='timer--control' onClick={handleStartStopClick}>Start/Stop</button>
+							<button id="reset" className='timer--control' onClick={handleResetButtonClick}>Reset</button>
+						</div>
+					</CircularProgressbarWithChildren>
 				</div>
+				
 				<div className='pomodoro--settings'>
 					<div className='pomodoro--settings-wrapper'>
 						<div id="break-label">Break Length</div>
